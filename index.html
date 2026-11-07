@@ -119,6 +119,19 @@
     .top-nav { display:flex; align-items:center; gap:8px; }
     .top-nav a { color:#656c78; text-decoration:none; padding:12px 16px; border-radius:999px; transition:background .25s,color .25s; }
     .top-nav a:hover { background:#eef1f6; color:var(--ink); }
+    .sound-toggle {
+      display:inline-flex; align-items:center; gap:8px; flex-shrink:0;
+      padding:10px 14px; border:1px solid rgba(255,255,255,.9); border-radius:999px;
+      color:#687891; background:rgba(255,255,255,.55); font:500 9px "DM Sans",sans-serif;
+      letter-spacing:.08em; cursor:pointer;
+      box-shadow:0 5px 18px rgba(40,53,75,.045),inset 0 1px 0 white;
+      backdrop-filter:blur(18px) saturate(1.5); -webkit-backdrop-filter:blur(18px) saturate(1.5);
+      transition:background .25s,transform .25s,border-color .25s;
+    }
+    .sound-toggle:hover { background:rgba(255,255,255,.82); transform:translateY(-1px); }
+    .sound-toggle[aria-pressed="true"] { color:#fff; background:linear-gradient(135deg,#657792,#899bb5); border-color:rgba(255,255,255,.8); }
+    .sound-icon { font-size:14px; line-height:1; }
+    .sound-toggle:focus-visible { outline:2px solid #8092ad; outline-offset:4px; }
     main { min-height:calc(100vh - 115px); display:flex; align-items:center; padding:80px 0 100px; }
     .hero {
       width:100%; display:grid; grid-template-columns:minmax(280px,.88fr) 1.3fr;
@@ -304,6 +317,8 @@
       .brand-mark { font-size:20px; }
       .brand-caption { font-size:7px; }
       .header-note { display:none; }
+      .sound-toggle { padding:9px 10px; font-size:8px; gap:5px; }
+      .sound-icon { font-size:12px; }
       .top-nav { gap:1px; }
       .top-nav a { padding:10px 11px; font-size:8px; }
       main { padding:72px 0 66px; }
@@ -338,6 +353,9 @@
         <a href="#projects">Works</a>
         <a href="#about">About</a>
       </nav>
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false" aria-label="Turn website sound on">
+        <span class="sound-icon" aria-hidden="true">♫</span><span class="sound-label">Sound off</span>
+      </button>
       <div class="header-note">Official website</div>
     </header>
 
@@ -425,6 +443,36 @@
       <footer>© 2026 Khalid Alwaleed Goufe<br>Personal website</footer>
     </div>
   </div>
+
+  <script>
+    (() => {
+      const soundButton = document.getElementById('soundToggle');
+      if (soundButton) {
+        const soundtrack = new Audio('sounds/3-strikes.m4a');
+        soundtrack.loop = true;
+        soundtrack.preload = 'none';
+        soundButton.addEventListener('click', async () => {
+          if (soundtrack.paused) {
+            try {
+              await soundtrack.play();
+              soundButton.setAttribute('aria-pressed', 'true');
+              soundButton.setAttribute('aria-label', 'Turn website sound off');
+              soundButton.querySelector('.sound-label').textContent = 'Sound on';
+            } catch (error) {
+              soundButton.setAttribute('aria-pressed', 'false');
+              soundButton.querySelector('.sound-label').textContent = 'Add audio file';
+              soundButton.setAttribute('aria-label', 'Audio file is not available yet');
+            }
+          } else {
+            soundtrack.pause();
+            soundButton.setAttribute('aria-pressed', 'false');
+            soundButton.setAttribute('aria-label', 'Turn website sound on');
+            soundButton.querySelector('.sound-label').textContent = 'Sound off';
+          }
+        });
+      }
+    })();
+  </script>
 
   <script>
     (() => {
