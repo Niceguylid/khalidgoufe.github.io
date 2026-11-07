@@ -126,64 +126,95 @@
     }
     .emblem-wrap { display:grid; place-items:center; perspective:1100px; position:relative; }
     .liquid-stage {
-      width:min(100%,430px); aspect-ratio:1; position:relative; display:grid; place-items:center;
+      width:min(100%,440px); aspect-ratio:1; position:relative; display:grid; place-items:center;
       isolation:isolate; filter:drop-shadow(0 34px 48px rgba(91,111,148,.16));
+      --light-x:32%; --light-y:22%;
     }
     .liquid-orbit {
-      position:absolute; width:88%; height:88%; border:1px solid rgba(255,255,255,.74);
+      position:absolute; width:89%; height:89%; border:1px solid rgba(255,255,255,.88);
       border-radius:43% 57% 61% 39% / 44% 42% 58% 56%;
-      background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.02) 38%,rgba(173,193,224,.12));
-      box-shadow:inset 2px 3px 8px rgba(255,255,255,.86),inset -10px -16px 35px rgba(146,166,201,.12),0 0 0 1px rgba(255,255,255,.2);
-      backdrop-filter:blur(4px) saturate(1.7); -webkit-backdrop-filter:blur(4px) saturate(1.7);
+      background:
+        radial-gradient(ellipse at var(--light-x) var(--light-y),rgba(255,255,255,.82),transparent 22%),
+        linear-gradient(135deg,rgba(255,255,255,.28),rgba(255,255,255,.025) 38%,rgba(151,181,224,.18));
+      box-shadow:inset 2px 3px 9px rgba(255,255,255,.98),inset -10px -16px 35px rgba(146,166,201,.14),0 0 0 1px rgba(255,255,255,.24);
+      backdrop-filter:blur(7px) saturate(1.75); -webkit-backdrop-filter:blur(7px) saturate(1.75);
       transform:rotate(-18deg);
     }
     .liquid-orbit::before {
-      content:""; position:absolute; inset:8%; border-radius:inherit;
-      border:1px solid rgba(255,255,255,.55);
-      background:radial-gradient(ellipse at 28% 18%,rgba(255,255,255,.8),transparent 26%),linear-gradient(145deg,rgba(255,255,255,.13),rgba(185,204,232,.05) 55%,rgba(255,255,255,.22));
-      box-shadow:inset 0 0 30px rgba(255,255,255,.24);
+      content:""; position:absolute; inset:7%; border-radius:inherit;
+      border:1px solid rgba(255,255,255,.78);
+      background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(185,204,232,.025) 55%,rgba(255,255,255,.18));
+      box-shadow:inset 0 0 32px rgba(255,255,255,.28);
     }
     .liquid-orbit::after {
-      content:""; position:absolute; width:44%; height:25%; top:12%; left:15%;
-      border-radius:50%; background:rgba(255,255,255,.72); filter:blur(17px); transform:rotate(-32deg);
+      content:""; position:absolute; width:47%; height:20%; top:12%; left:13%;
+      border-radius:50%; background:rgba(255,255,255,.9); filter:blur(16px); transform:rotate(-32deg);
     }
     .liquid-core {
-      position:absolute; width:61%; height:61%; border-radius:47% 53% 58% 42% / 43% 46% 54% 57%;
+      position:absolute; width:62%; height:62%; border-radius:47% 53% 58% 42% / 43% 46% 54% 57%;
       background:
-        radial-gradient(ellipse at 27% 18%,rgba(255,255,255,.98),transparent 24%),
-        radial-gradient(ellipse at 75% 78%,rgba(159,184,220,.68),transparent 38%),
-        linear-gradient(145deg,rgba(255,255,255,.86),rgba(206,220,240,.38) 43%,rgba(255,255,255,.18) 68%,rgba(179,194,220,.52));
-      border:1px solid rgba(255,255,255,.94);
-      box-shadow:inset 4px 5px 13px rgba(255,255,255,.96),inset -12px -17px 30px rgba(118,143,181,.19),0 12px 38px rgba(112,135,174,.13);
-      backdrop-filter:blur(12px) saturate(1.8); -webkit-backdrop-filter:blur(12px) saturate(1.8);
+        radial-gradient(ellipse at var(--light-x) var(--light-y),rgba(255,255,255,.98),transparent 24%),
+        radial-gradient(ellipse at 76% 79%,rgba(148,177,222,.68),transparent 39%),
+        linear-gradient(145deg,rgba(255,255,255,.94),rgba(205,222,246,.42) 43%,rgba(255,255,255,.25) 68%,rgba(171,192,226,.58));
+      border:1px solid rgba(255,255,255,.98);
+      box-shadow:inset 4px 5px 14px rgba(255,255,255,.98),inset -12px -17px 30px rgba(118,143,181,.2),0 12px 38px rgba(112,135,174,.16);
+      backdrop-filter:blur(15px) saturate(1.9); -webkit-backdrop-filter:blur(15px) saturate(1.9);
       transform:rotate(14deg); overflow:hidden;
     }
     .liquid-core::before {
-      content:""; position:absolute; inset:3%; border-radius:inherit;
-      background:linear-gradient(118deg,rgba(255,255,255,.66),transparent 25% 60%,rgba(255,255,255,.32));
+      content:""; position:absolute; inset:0; border-radius:inherit;
+      background:
+        radial-gradient(ellipse at var(--light-x) var(--light-y),rgba(255,255,255,.8),transparent 34%),
+        linear-gradient(118deg,rgba(255,255,255,.52),transparent 28% 60%,rgba(255,255,255,.34));
       mix-blend-mode:screen;
     }
     .liquid-core::after {
       content:""; position:absolute; width:62%; height:24%; top:8%; left:15%;
-      border-radius:50%; background:rgba(255,255,255,.86); filter:blur(13px); transform:rotate(-28deg);
+      border-radius:50%; background:rgba(255,255,255,.92); filter:blur(14px); transform:rotate(-28deg);
     }
     .emblem-inner { text-align:center; position:relative; z-index:2; }
     .monogram {
       font:400 clamp(62px,8vw,100px)/.9 "Cormorant Garamond",serif;
-      letter-spacing:.035em; color:#65748e; padding-left:.035em;
-      text-shadow:0 2px 22px rgba(255,255,255,.95);
+      letter-spacing:.035em; color:#62738e; padding-left:.035em;
+      text-shadow:0 2px 24px rgba(255,255,255,.98);
     }
     .emblem-line { width:35px; height:1px; background:rgba(101,116,142,.65); margin:18px auto 13px; }
     .emblem-caption { font-size:8px; letter-spacing:.3em; color:#6f7e96; text-transform:uppercase; }
     .glass-drop {
-      position:absolute; z-index:3; border:1px solid rgba(255,255,255,.92); border-radius:50%;
-      background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(191,210,237,.19));
-      box-shadow:inset 1px 2px 5px rgba(255,255,255,.96),0 12px 25px rgba(100,124,163,.12);
-      backdrop-filter:blur(9px) saturate(1.8); -webkit-backdrop-filter:blur(9px) saturate(1.8);
+      position:absolute; z-index:3; border:1px solid rgba(255,255,255,.96); border-radius:50%;
+      background:
+        radial-gradient(ellipse at 28% 20%,rgba(255,255,255,.98),transparent 35%),
+        linear-gradient(145deg,rgba(255,255,255,.82),rgba(174,198,232,.24));
+      box-shadow:inset 1px 2px 6px rgba(255,255,255,.98),inset -4px -6px 12px rgba(126,151,190,.13),0 12px 25px rgba(100,124,163,.15);
+      backdrop-filter:blur(12px) saturate(1.9); -webkit-backdrop-filter:blur(12px) saturate(1.9);
     }
-    .glass-drop.one { width:68px; height:68px; top:8%; right:9%; }
-    .glass-drop.two { width:36px; height:36px; bottom:15%; left:7%; }
-    .glass-drop.three { width:22px; height:22px; top:22%; left:8%; }
+    .glass-drop.one { width:70px; height:70px; top:8%; right:9%; }
+    .glass-drop.two { width:39px; height:39px; bottom:15%; left:7%; }
+    .glass-drop.three { width:23px; height:23px; top:22%; left:8%; }
+    .glass-nav {
+      background:rgba(255,255,255,.48)!important;
+      border:1px solid rgba(255,255,255,.88)!important;
+      box-shadow:0 9px 30px rgba(63,82,114,.08),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(142,164,199,.12)!important;
+      backdrop-filter:blur(30px) saturate(1.9); -webkit-backdrop-filter:blur(30px) saturate(1.9);
+    }
+    .glass-nav::after {
+      content:""; position:absolute; inset:1px 2px auto; height:38%; border-radius:inherit;
+      background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0)); pointer-events:none;
+    }
+    .hero-button,.project-card { position:relative; overflow:hidden; }
+    .hero-button::after {
+      content:""; position:absolute; inset:1px 1px auto; height:48%; border-radius:inherit;
+      background:linear-gradient(180deg,rgba(255,255,255,.38),transparent); pointer-events:none;
+    }
+    @media (prefers-reduced-motion:no-preference) {
+      .liquid-orbit { animation:glass-drift 9s ease-in-out infinite alternate; }
+      .liquid-core { animation:core-drift 7s ease-in-out infinite alternate; }
+      .glass-drop.one { animation:drop-float 6s ease-in-out infinite alternate; }
+      .glass-drop.two { animation:drop-float 7s -2s ease-in-out infinite alternate; }
+      @keyframes glass-drift { from { transform:rotate(-20deg) translateY(-3px); } to { transform:rotate(-13deg) translateY(5px); } }
+      @keyframes core-drift { from { transform:rotate(11deg) scale(.985); } to { transform:rotate(17deg) scale(1.015); } }
+      @keyframes drop-float { from { translate:0 0; } to { translate:0 -9px; } }
+    }
     .copy { position:relative; }
     .eyebrow { display:flex; align-items:center; gap:12px; color:#77869d; margin-bottom:27px; }
     .eyebrow::before { content:""; width:24px; height:1px; background:#9baac1; }
@@ -298,7 +329,7 @@
 </head>
 <body>
   <div class="page">
-    <header>
+    <header class="glass-nav">
       <a class="brand" href="#" aria-label="KAG home">
         <span class="brand-mark">KAG</span>
         <span class="brand-caption">Personal identity</span>
@@ -394,5 +425,24 @@
       <footer>© 2026 Khalid Alwaleed Goufe<br>Personal website</footer>
     </div>
   </div>
+
+  <script>
+    (() => {
+      const stage = document.querySelector('.liquid-stage');
+      if (!stage || !window.matchMedia('(pointer:fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      stage.addEventListener('pointermove', (event) => {
+        const rect = stage.getBoundingClientRect();
+        const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
+        const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+        stage.style.setProperty('--light-x', x + '%');
+        stage.style.setProperty('--light-y', y + '%');
+      });
+      stage.addEventListener('pointerleave', () => {
+        stage.style.setProperty('--light-x', '32%');
+        stage.style.setProperty('--light-y', '22%');
+      });
+    })();
+  </script>
+
 </body>
 </html>
