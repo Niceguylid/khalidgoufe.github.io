@@ -124,35 +124,66 @@
       width:100%; display:grid; grid-template-columns:minmax(280px,.88fr) 1.3fr;
       align-items:center; gap:clamp(48px,8vw,126px);
     }
-    .emblem-wrap { display:grid; place-items:center; perspective:900px; }
-    .emblem {
-      width:min(100%,390px); aspect-ratio:1; position:relative; display:grid; place-items:center;
-      border:1px solid rgba(255,255,255,.95); border-radius:36%;
+    .emblem-wrap { display:grid; place-items:center; perspective:1100px; position:relative; }
+    .liquid-stage {
+      width:min(100%,430px); aspect-ratio:1; position:relative; display:grid; place-items:center;
+      isolation:isolate; filter:drop-shadow(0 34px 48px rgba(91,111,148,.16));
+    }
+    .liquid-orbit {
+      position:absolute; width:88%; height:88%; border:1px solid rgba(255,255,255,.74);
+      border-radius:43% 57% 61% 39% / 44% 42% 58% 56%;
+      background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.02) 38%,rgba(173,193,224,.12));
+      box-shadow:inset 2px 3px 8px rgba(255,255,255,.86),inset -10px -16px 35px rgba(146,166,201,.12),0 0 0 1px rgba(255,255,255,.2);
+      backdrop-filter:blur(4px) saturate(1.7); -webkit-backdrop-filter:blur(4px) saturate(1.7);
+      transform:rotate(-18deg);
+    }
+    .liquid-orbit::before {
+      content:""; position:absolute; inset:8%; border-radius:inherit;
+      border:1px solid rgba(255,255,255,.55);
+      background:radial-gradient(ellipse at 28% 18%,rgba(255,255,255,.8),transparent 26%),linear-gradient(145deg,rgba(255,255,255,.13),rgba(185,204,232,.05) 55%,rgba(255,255,255,.22));
+      box-shadow:inset 0 0 30px rgba(255,255,255,.24);
+    }
+    .liquid-orbit::after {
+      content:""; position:absolute; width:44%; height:25%; top:12%; left:15%;
+      border-radius:50%; background:rgba(255,255,255,.72); filter:blur(17px); transform:rotate(-32deg);
+    }
+    .liquid-core {
+      position:absolute; width:61%; height:61%; border-radius:47% 53% 58% 42% / 43% 46% 54% 57%;
       background:
-        radial-gradient(circle at 32% 25%,rgba(255,255,255,.98),transparent 30%),
-        radial-gradient(circle at 72% 78%,rgba(178,196,224,.6),transparent 44%),
-        linear-gradient(145deg,rgba(255,255,255,.88),rgba(224,231,242,.56) 54%,rgba(248,242,250,.9));
-      box-shadow:0 34px 90px rgba(91,111,148,.16),inset 0 2px 8px white,inset 0 -20px 55px rgba(163,179,207,.16);
-      transform:rotate(-7deg); transition:transform .7s cubic-bezier(.2,.8,.2,1);
+        radial-gradient(ellipse at 27% 18%,rgba(255,255,255,.98),transparent 24%),
+        radial-gradient(ellipse at 75% 78%,rgba(159,184,220,.68),transparent 38%),
+        linear-gradient(145deg,rgba(255,255,255,.86),rgba(206,220,240,.38) 43%,rgba(255,255,255,.18) 68%,rgba(179,194,220,.52));
+      border:1px solid rgba(255,255,255,.94);
+      box-shadow:inset 4px 5px 13px rgba(255,255,255,.96),inset -12px -17px 30px rgba(118,143,181,.19),0 12px 38px rgba(112,135,174,.13);
+      backdrop-filter:blur(12px) saturate(1.8); -webkit-backdrop-filter:blur(12px) saturate(1.8);
+      transform:rotate(14deg); overflow:hidden;
     }
-    .emblem:hover { transform:rotate(0deg) translateY(-5px); }
-    .emblem::before {
-      content:""; position:absolute; inset:12%; border-radius:34%;
-      border:1px solid rgba(255,255,255,.88); box-shadow:0 0 0 1px rgba(154,170,197,.08);
+    .liquid-core::before {
+      content:""; position:absolute; inset:3%; border-radius:inherit;
+      background:linear-gradient(118deg,rgba(255,255,255,.66),transparent 25% 60%,rgba(255,255,255,.32));
+      mix-blend-mode:screen;
     }
-    .emblem::after {
-      content:""; position:absolute; width:72%; height:72%; border-radius:50%;
-      background:linear-gradient(135deg,rgba(255,255,255,.48),rgba(176,194,224,.12));
-      filter:blur(1px); transform:translate(15%,16%);
+    .liquid-core::after {
+      content:""; position:absolute; width:62%; height:24%; top:8%; left:15%;
+      border-radius:50%; background:rgba(255,255,255,.86); filter:blur(13px); transform:rotate(-28deg);
     }
-    .emblem-inner { text-align:center; position:relative; z-index:1; transform:rotate(7deg); }
+    .emblem-inner { text-align:center; position:relative; z-index:2; }
     .monogram {
-      font:400 clamp(68px,9vw,112px)/.9 "Cormorant Garamond",serif;
+      font:400 clamp(62px,8vw,100px)/.9 "Cormorant Garamond",serif;
       letter-spacing:.035em; color:#65748e; padding-left:.035em;
-      text-shadow:0 2px 22px rgba(255,255,255,.9);
+      text-shadow:0 2px 22px rgba(255,255,255,.95);
     }
-    .emblem-line { width:36px; height:1px; background:#9ba9bf; margin:20px auto 14px; opacity:.8; }
-    .emblem-caption { font-size:8px; letter-spacing:.3em; color:#7e899b; text-transform:uppercase; }
+    .emblem-line { width:35px; height:1px; background:rgba(101,116,142,.65); margin:18px auto 13px; }
+    .emblem-caption { font-size:8px; letter-spacing:.3em; color:#6f7e96; text-transform:uppercase; }
+    .glass-drop {
+      position:absolute; z-index:3; border:1px solid rgba(255,255,255,.92); border-radius:50%;
+      background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(191,210,237,.19));
+      box-shadow:inset 1px 2px 5px rgba(255,255,255,.96),0 12px 25px rgba(100,124,163,.12);
+      backdrop-filter:blur(9px) saturate(1.8); -webkit-backdrop-filter:blur(9px) saturate(1.8);
+    }
+    .glass-drop.one { width:68px; height:68px; top:8%; right:9%; }
+    .glass-drop.two { width:36px; height:36px; bottom:15%; left:7%; }
+    .glass-drop.three { width:22px; height:22px; top:22%; left:8%; }
     .copy { position:relative; }
     .eyebrow { display:flex; align-items:center; gap:12px; color:#77869d; margin-bottom:27px; }
     .eyebrow::before { content:""; width:24px; height:1px; background:#9baac1; }
@@ -224,7 +255,7 @@
       .page { width:calc(100% - 56px); }
       .hero { grid-template-columns:1fr; gap:52px; text-align:center; }
       main { min-height:auto; padding:90px 0 82px; }
-      .emblem { width:min(66vw,310px); }
+      .liquid-stage { width:min(76vw,350px); }
       .eyebrow { justify-content:center; }
       .hero-description { margin-left:auto; margin-right:auto; }
       .hero-actions,.signature { justify-content:center; }
@@ -254,10 +285,10 @@
       footer { text-align:left; }
     }
     @media (prefers-reduced-motion:no-preference) {
-      .emblem { animation:float-in 1s cubic-bezier(.2,.8,.2,1) both; }
+      .liquid-stage { animation:float-in 1s cubic-bezier(.2,.8,.2,1) both; }
       .copy { animation:rise-in .9s .1s ease both; }
       .project-card { animation:rise-in .7s ease both; }
-      @keyframes float-in { from { opacity:0; transform:translateY(18px) rotate(-10deg) scale(.96); } to { opacity:1; transform:translateY(0) rotate(-7deg) scale(1); } }
+      @keyframes float-in { from { opacity:0; transform:translateY(22px) scale(.94); } to { opacity:1; transform:translateY(0) scale(1); } }
       @keyframes rise-in { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
     }
     @media (prefers-reduced-motion:reduce) {
@@ -282,12 +313,17 @@
     <main>
       <section class="hero" aria-label="Khalid Alwaleed Goufe">
         <div class="emblem-wrap">
-          <div class="emblem" aria-label="KAG monogram">
+          <div class="liquid-stage" role="img" aria-label="KAG monogram floating inside a liquid glass sculpture">
+            <div class="liquid-orbit"></div>
+            <div class="liquid-core"></div>
             <div class="emblem-inner">
               <div class="monogram">KAG</div>
               <div class="emblem-line"></div>
               <div class="emblem-caption">The signature</div>
             </div>
+            <span class="glass-drop one"></span>
+            <span class="glass-drop two"></span>
+            <span class="glass-drop three"></span>
           </div>
         </div>
         <div class="copy">
