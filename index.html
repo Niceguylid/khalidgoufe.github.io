@@ -109,6 +109,27 @@
     }
     .lower-mark { font:400 19px "Cormorant Garamond",serif; color:var(--gold); letter-spacing:.16em; }
     footer { text-align:right; line-height:1.8; }
+
+    .projects { border-top:1px solid rgba(197,173,124,.16); padding:76px 0 92px; }
+    .projects-heading { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:34px; }
+    .projects-kicker { color:var(--gold); font-size:9px; letter-spacing:.25em; text-transform:uppercase; margin-bottom:12px; }
+    .projects h2 { margin:0; font:300 clamp(38px,5vw,58px)/1 "Cormorant Garamond",serif; }
+    .projects-intro { max-width:280px; color:var(--muted); font-size:12px; line-height:1.8; }
+    .project-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    .project-card { min-height:235px; padding:27px 24px; display:flex; flex-direction:column; border:1px solid var(--line); background:linear-gradient(145deg,rgba(197,173,124,.055),rgba(17,17,15,.72)); text-decoration:none; color:var(--ivory); transition:border-color .25s, transform .25s, background .25s; }
+    .project-card:hover { border-color:rgba(197,173,124,.65); transform:translateY(-4px); background:rgba(197,173,124,.07); }
+    .project-number { color:var(--gold); font:300 30px "Cormorant Garamond",serif; }
+    .project-type { margin-top:26px; color:var(--muted); font-size:8px; letter-spacing:.22em; text-transform:uppercase; }
+    .project-card h3 { margin:9px 0 10px; font:400 27px/1.05 "Cormorant Garamond",serif; }
+    .project-card p { margin:0; color:var(--muted); font-size:11px; line-height:1.8; }
+    .project-link { margin-top:auto; padding-top:23px; color:var(--gold); font-size:9px; letter-spacing:.16em; text-transform:uppercase; }
+    @media (max-width:760px) {
+      .projects { padding:60px 0 68px; }
+      .projects-heading { align-items:start; flex-direction:column; }
+      .project-grid { grid-template-columns:1fr; }
+      .project-card { min-height:205px; }
+    }
+
     @media (max-width:760px) {
       .page { width:calc(100% - 76px); }
       header { height:82px; }
@@ -168,6 +189,40 @@
         </div>
       </section>
     </main>
+
+
+    <section class="projects" id="projects" aria-labelledby="projects-title">
+      <div class="projects-heading">
+        <div>
+          <div class="projects-kicker">Selected work</div>
+          <h2 id="projects-title">Projects &amp; Works</h2>
+        </div>
+        <p class="projects-intro">A selection of digital projects and creative work associated with KAG.</p>
+      </div>
+      <div class="project-grid">
+        <a class="project-card" href="https://khalidgoufe.blogspot.com/" target="_blank" rel="noopener noreferrer">
+          <div class="project-number">01</div>
+          <div class="project-type">Blog · Publishing</div>
+          <h3>Khalid Goufe Blog</h3>
+          <p>A personal blog for articles, ideas, and written content.</p>
+          <div class="project-link">Visit blog ↗</div>
+        </a>
+        <a class="project-card" href="https://niceguylid.github.io/MCU-HUB/" target="_blank" rel="noopener noreferrer">
+          <div class="project-number">02</div>
+          <div class="project-type">Fan website · Marvel</div>
+          <h3>MCU HUB</h3>
+          <p>A fan-made website exploring the Marvel Cinematic Universe.</p>
+          <div class="project-link">Explore website ↗</div>
+        </a>
+        <a class="project-card" href="https://www.roblox.com/games/77911121717334/" target="_blank" rel="noopener noreferrer">
+          <div class="project-number">03</div>
+          <div class="project-type">Game development · Roblox</div>
+          <h3>Build An Army, Steal An Army!</h3>
+          <p>A Roblox game project built around collecting units, building a base, and forming an army.</p>
+          <div class="project-link">View Roblox experience ↗</div>
+        </a>
+      </div>
+    </section>
 
     <div class="lower">
       <div class="lower-mark">KAG</div>
