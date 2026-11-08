@@ -204,6 +204,101 @@
     .glass-drop.one { width:70px; height:70px; top:8%; right:9%; }
     .glass-drop.two { width:39px; height:39px; bottom:15%; left:7%; }
     .glass-drop.three { width:23px; height:23px; top:22%; left:8%; }
+    /* MiKors AI visual core — lightweight CSS/SVG-free holographic treatment */
+    .mikors-stage { filter:drop-shadow(0 34px 48px rgba(91,111,148,.18)); }
+    .mikors-stage .liquid-orbit { opacity:.68; }
+    .mikors-stage .liquid-core {
+      width:58%; height:58%;
+      background:
+        radial-gradient(ellipse at 35% 23%,rgba(255,255,255,.94),transparent 23%),
+        radial-gradient(ellipse at 68% 72%,rgba(104,158,222,.52),transparent 42%),
+        linear-gradient(145deg,rgba(255,255,255,.9),rgba(197,220,247,.36) 48%,rgba(112,151,203,.3));
+    }
+    .mikors-orbit {
+      position:absolute; z-index:2; width:76%; height:76%; border:1px solid rgba(112,151,202,.38);
+      border-radius:50%; pointer-events:none; transform-style:preserve-3d;
+      box-shadow:0 0 18px rgba(133,176,226,.08),inset 0 0 16px rgba(255,255,255,.18);
+    }
+    .mikors-orbit::before,.mikors-orbit::after {
+      content:""; position:absolute; inset:9%; border:1px solid rgba(255,255,255,.72); border-radius:50%;
+    }
+    .mikors-orbit::after {
+      inset:22%; border-color:rgba(107,160,218,.32); box-shadow:0 0 14px rgba(111,170,231,.16);
+    }
+    .orbit-a { width:82%; height:43%; transform:rotate(-28deg); border-color:rgba(111,157,211,.62); }
+    .orbit-b { width:88%; height:54%; transform:rotate(58deg); border-color:rgba(255,255,255,.86); }
+    .orbit-c { width:69%; height:91%; transform:rotate(28deg); border-color:rgba(125,169,219,.38); }
+    .mikors-scan {
+      position:absolute; z-index:3; width:62%; height:62%; border-radius:50%; overflow:hidden;
+      pointer-events:none; opacity:.65;
+      background:conic-gradient(from 0deg,transparent 0deg,rgba(113,190,245,.02) 250deg,rgba(108,184,242,.3) 292deg,rgba(255,255,255,.72) 300deg,transparent 315deg);
+      mask:radial-gradient(circle,transparent 48%,#000 50%,#000 51%,transparent 53%);
+      -webkit-mask:radial-gradient(circle,transparent 48%,#000 50%,#000 51%,transparent 53%);
+    }
+    .mikors-particle {
+      position:absolute; z-index:4; width:5px; height:5px; border-radius:50%;
+      background:#fff; box-shadow:0 0 8px 2px rgba(113,181,239,.65),0 0 18px rgba(113,181,239,.38);
+      pointer-events:none;
+    }
+    .particle-a { top:22%; left:24%; }
+    .particle-b { top:31%; right:17%; width:3px; height:3px; }
+    .particle-c { bottom:24%; right:25%; width:4px; height:4px; }
+    .particle-d { bottom:32%; left:16%; width:3px; height:3px; }
+    .mikors-label { width:100%; padding-top:4px; }
+    .mikors-label .monogram {
+      font:500 clamp(38px,5.3vw,59px)/.95 "DM Sans",sans-serif; letter-spacing:-.075em;
+      color:#526b8c; text-shadow:0 2px 22px rgba(255,255,255,.98);
+    }
+    .mikors-label .emblem-line { margin:12px auto 9px; width:29px; }
+    .mikors-label .emblem-caption { font-size:7px; letter-spacing:.19em; }
+    .mikors-status {
+      display:flex; justify-content:center; align-items:center; gap:7px; margin-top:12px;
+      color:#7288a5; font-size:7px; letter-spacing:.17em; font-weight:500;
+    }
+    .mikors-status-dot {
+      width:5px; height:5px; border-radius:50%; background:#9baec8;
+      box-shadow:0 0 8px rgba(117,163,215,.48);
+    }
+    .mikors-activate {
+      margin-top:12px; padding:7px 11px; border:1px solid rgba(255,255,255,.85);
+      border-radius:999px; background:rgba(255,255,255,.38); color:#647d9f;
+      font:500 7px "DM Sans",sans-serif; letter-spacing:.13em; cursor:pointer;
+      box-shadow:0 4px 14px rgba(67,100,145,.08),inset 0 1px 0 #fff;
+      backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+      transition:background .25s,transform .25s,box-shadow .25s;
+    }
+    .mikors-activate span { margin-left:5px; }
+    .mikors-activate:hover { transform:translateY(-2px); background:rgba(255,255,255,.72); }
+    .mikors-activate:focus-visible { outline:2px solid #809fc5; outline-offset:3px; }
+    .mikors-stage.is-active .mikors-orbit { border-color:rgba(91,163,231,.72); box-shadow:0 0 22px rgba(105,178,239,.2),inset 0 0 18px rgba(255,255,255,.25); }
+    .mikors-stage.is-active .mikors-scan { opacity:1; }
+    .mikors-stage.is-active .mikors-status-dot { background:#62b9e8; box-shadow:0 0 5px 3px rgba(98,185,232,.3),0 0 16px rgba(98,185,232,.65); }
+    .mikors-stage.is-active .mikors-activate { color:#fff; background:linear-gradient(135deg,#648bb9,#83b5d7); }
+    @media (prefers-reduced-motion:no-preference) {
+      .orbit-a { animation:orbit-spin 13s linear infinite; }
+      .orbit-b { animation:orbit-spin 19s linear infinite reverse; }
+      .orbit-c { animation:orbit-spin 24s linear infinite; }
+      .mikors-scan { animation:orbit-spin 7s linear infinite; }
+      .particle-a { animation:particle-pulse 2.8s ease-in-out infinite alternate; }
+      .particle-b { animation:particle-pulse 3.4s -1s ease-in-out infinite alternate; }
+      .particle-c { animation:particle-pulse 2.5s -.7s ease-in-out infinite alternate; }
+      .particle-d { animation:particle-pulse 3.1s -1.5s ease-in-out infinite alternate; }
+      .mikors-stage.is-active .orbit-a { animation-duration:7s; }
+      .mikors-stage.is-active .orbit-b { animation-duration:10s; }
+      .mikors-stage.is-active .mikors-scan { animation-duration:2.8s; }
+      @keyframes orbit-spin { to { rotate:360deg; } }
+      @keyframes particle-pulse { from { opacity:.28; scale:.7; } to { opacity:1; scale:1.35; } }
+    }
+    @media (max-width:480px) {
+      .mikors-label .monogram { font-size:clamp(35px,10vw,47px); }
+      .mikors-label .emblem-caption { font-size:6px; }
+      .mikors-status { margin-top:9px; font-size:6px; }
+      .mikors-activate { margin-top:9px; padding:6px 9px; font-size:6px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .mikors-orbit,.mikors-scan,.mikors-particle { animation:none!important; }
+    }
+
     .glass-nav {
       background:rgba(255,255,255,.48)!important;
       border:1px solid rgba(255,255,255,.88)!important;
@@ -362,13 +457,23 @@
     <main>
       <section class="hero" aria-label="Khalid Alwaleed Goufe">
         <div class="emblem-wrap">
-          <div class="liquid-stage" role="img" aria-label="KAG monogram floating inside a liquid glass sculpture">
+          <div class="liquid-stage mikors-stage" aria-label="MiKors AI visual core">
             <div class="liquid-orbit"></div>
             <div class="liquid-core"></div>
-            <div class="emblem-inner">
-              <div class="monogram">KAG</div>
+            <div class="mikors-orbit orbit-a" aria-hidden="true"></div>
+            <div class="mikors-orbit orbit-b" aria-hidden="true"></div>
+            <div class="mikors-orbit orbit-c" aria-hidden="true"></div>
+            <div class="mikors-scan" aria-hidden="true"></div>
+            <span class="mikors-particle particle-a" aria-hidden="true"></span>
+            <span class="mikors-particle particle-b" aria-hidden="true"></span>
+            <span class="mikors-particle particle-c" aria-hidden="true"></span>
+            <span class="mikors-particle particle-d" aria-hidden="true"></span>
+            <div class="emblem-inner mikors-label">
+              <div class="monogram">MiKors</div>
               <div class="emblem-line"></div>
-              <div class="emblem-caption">The signature</div>
+              <div class="emblem-caption">Personal intelligence</div>
+              <div class="mikors-status"><span class="mikors-status-dot"></span><span id="mikorsStatus">CORE STANDBY</span></div>
+              <button class="mikors-activate" id="mikorsActivate" type="button" aria-pressed="false">INITIALIZE CORE <span aria-hidden="true">↗</span></button>
             </div>
             <span class="glass-drop one"></span>
             <span class="glass-drop two"></span>
@@ -471,6 +576,21 @@
           }
         });
       }
+    })();
+  </script>
+
+  <script>
+    (() => {
+      const stage = document.querySelector('.mikors-stage');
+      const activate = document.getElementById('mikorsActivate');
+      const status = document.getElementById('mikorsStatus');
+      if (!stage || !activate || !status) return;
+      activate.addEventListener('click', () => {
+        const active = stage.classList.toggle('is-active');
+        activate.setAttribute('aria-pressed', String(active));
+        activate.innerHTML = active ? 'CORE ACTIVE <span aria-hidden="true">✦</span>' : 'INITIALIZE CORE <span aria-hidden="true">↗</span>';
+        status.textContent = active ? 'VISUAL CORE ACTIVE' : 'CORE STANDBY';
+      });
     })();
   </script>
 
