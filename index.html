@@ -205,12 +205,12 @@
     .glass-drop.two { width:39px; height:39px; bottom:15%; left:7%; }
     .glass-drop.three { width:23px; height:23px; top:22%; left:8%; }
     /* MiKors AI visual core — lightweight CSS/SVG-free holographic treatment */
-    .mikors-stage { filter:drop-shadow(0 34px 48px rgba(91,111,148,.18)); }
+    .mikors-stage { filter:drop-shadow(0 34px 48px rgba(91,111,148,.18)); transform-style:preserve-3d; will-change:transform; }
     .mikors-webgl {
       position:absolute; z-index:1; inset:0; width:100%; height:100%;
       display:block; pointer-events:none;
     }
-    .mikors-stage.has-webgl .liquid-core { opacity:.12; }
+    .mikors-stage.has-webgl .liquid-core { opacity:.3; }
     .mikors-stage.has-webgl .liquid-orbit { opacity:.2; }
     .mikors-stage.has-webgl .mikors-orbit { opacity:.42; }
     .mikors-stage.has-webgl .mikors-scan { opacity:.18; }
@@ -706,8 +706,8 @@
         };
         const onPointer = (event) => {
           const rect = stage.getBoundingClientRect();
-          pointerX = ((event.clientX - rect.left) / rect.width - 0.5) * 0.7;
-          pointerY = ((event.clientY - rect.top) / rect.height - 0.5) * 0.7;
+          pointerX = ((event.clientX - rect.left) / rect.width - 0.5) * 1.25;
+          pointerY = ((event.clientY - rect.top) / rect.height - 0.5) * 1.25;
         };
         stage.addEventListener('pointermove', onPointer, { passive: true });
         stage.addEventListener('pointerleave', () => { pointerX = 0; pointerY = 0; }, { passive: true });
@@ -720,11 +720,14 @@
         const animate = () => {
           if (!active) { frame = requestAnimationFrame(animate); return; }
           const elapsed = clock.getElapsedTime();
-          const scrollTilt = (scrollProgress - 0.15) * 0.38;
-          coreGroup.rotation.y += ((elapsed * 0.12 + pointerX * 0.34 + scrollTilt) - coreGroup.rotation.y) * 0.035;
-          coreGroup.rotation.x += ((pointerY * 0.26 + Math.sin(elapsed * 0.32) * 0.045 + (scrollProgress - 0.5) * 0.12) - coreGroup.rotation.x) * 0.035;
-          coreGroup.rotation.z = Math.sin(elapsed * 0.2) * 0.045 + (scrollProgress - 0.5) * 0.08;
-          const scrollScale = 1 + Math.sin(scrollProgress * Math.PI) * 0.055;
+          const scrollTilt = (scrollProgress - 0.5) * 0.62;
+          const targetY = elapsed * 0.12 + pointerX * 0.62 + scrollTilt;
+          const targetX = pointerY * 0.48 + Math.sin(elapsed * 0.32) * 0.045 + (scrollProgress - 0.5) * 0.22;
+          coreGroup.rotation.y += (targetY - coreGroup.rotation.y) * 0.055;
+          coreGroup.rotation.x += (targetX - coreGroup.rotation.x) * 0.055;
+          coreGroup.rotation.z = Math.sin(elapsed * 0.2) * 0.055 + (scrollProgress - 0.5) * 0.16;
+          coreGroup.position.y += (((scrollProgress - 0.5) * 0.28) - coreGroup.position.y) * 0.04;
+          const scrollScale = 1 + Math.sin(scrollProgress * Math.PI) * 0.11;
           const pulse = 1 + Math.sin(elapsed * 1.15) * 0.012;
           coreGroup.scale.setScalar(scrollScale * pulse);
           core.scale.setScalar(1 + Math.sin(elapsed * 0.8) * 0.009);
@@ -777,9 +780,11 @@
           const center = rect.top + rect.height / 2;
           const normalized = (center - window.innerHeight / 2) / (window.innerHeight / 2 + rect.height / 2);
           const strength = Math.max(-1, Math.min(1, normalized));
-          const tilt = strength * (index === 1 ? -5 : 5) * range / 0.13;
-          const lift = Math.abs(strength) * 13;
-          el.style.transform = 'perspective(1100px) rotateX(' + tilt.toFixed(2) + 'deg) translateY(' + lift.toFixed(1) + 'px) translateZ(' + (12 * (1 - Math.abs(strength))).toFixed(1) + 'px)';
+          const tilt = strength * (index === 1 ? -10 : 10) * range / 0.13;
+          const lift = Math.abs(strength) * 22;
+          const depth = 34 * (1 - Math.abs(strength));
+          const drift = strength * (index % 2 === 0 ? -12 : 12);
+          el.style.transform = 'perspective(1400px) rotateX(' + tilt.toFixed(2) + 'deg) rotateY(' + (strength * (index === 1 ? 3 : -3)).toFixed(2) + 'deg) translate3d(' + drift.toFixed(1) + 'px,' + lift.toFixed(1) + 'px,' + depth.toFixed(1) + 'px)';
         });
         ticking = false;
       };
@@ -839,19 +844,28 @@
 
   <script>
     (() => {
-      const stage = document.querySelector('.liquid-stage');
+      const stage = document.querySelector('.mikors-stage');
       if (!stage || !window.matchMedia('(pointer:fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      let raf = 0;
       stage.addEventListener('pointermove', (event) => {
         const rect = stage.getBoundingClientRect();
-        const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / rect.width) * 100));
-        const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / rect.height) * 100));
+        const nx = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+        const ny = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+        const x = Math.max(0, Math.min(100, (nx + 1) * 50));
+        const y = Math.max(0, Math.min(100, (ny + 1) * 50));
         stage.style.setProperty('--light-x', x + '%');
         stage.style.setProperty('--light-y', y + '%');
-      });
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          stage.style.transform = 'perspective(1000px) rotateX(' + (-ny * 11).toFixed(2) + 'deg) rotateY(' + (nx * 13).toFixed(2) + 'deg) translateZ(12px)';
+        });
+      }, { passive:true });
       stage.addEventListener('pointerleave', () => {
+        cancelAnimationFrame(raf);
+        stage.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0)';
         stage.style.setProperty('--light-x', '32%');
         stage.style.setProperty('--light-y', '22%');
-      });
+      }, { passive:true });
     })();
   </script>
 
