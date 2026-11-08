@@ -206,6 +206,20 @@
     .glass-drop.three { width:23px; height:23px; top:22%; left:8%; }
     /* MiKors AI visual core — lightweight CSS/SVG-free holographic treatment */
     .mikors-stage { filter:drop-shadow(0 34px 48px rgba(91,111,148,.18)); }
+    .mikors-webgl {
+      position:absolute; z-index:1; inset:0; width:100%; height:100%;
+      display:block; pointer-events:none;
+    }
+    .mikors-stage.has-webgl .liquid-core { opacity:.12; }
+    .mikors-stage.has-webgl .liquid-orbit { opacity:.2; }
+    .mikors-stage.has-webgl .mikors-orbit { opacity:.42; }
+    .mikors-stage.has-webgl .mikors-scan { opacity:.18; }
+    .project-card { transform-style:preserve-3d; will-change:transform; }
+    .projects-heading,.about-kag { transform-style:preserve-3d; will-change:transform; }
+    @media (prefers-reduced-motion:reduce) {
+      .mikors-webgl { display:none; }
+      .project-card,.projects-heading,.about-kag { transform:none!important; }
+    }
     .mikors-stage .liquid-orbit { opacity:.68; }
     .mikors-stage .liquid-core {
       width:58%; height:58%;
@@ -460,6 +474,7 @@
           <div class="liquid-stage mikors-stage" aria-label="MiKors AI visual core">
             <div class="liquid-orbit"></div>
             <div class="liquid-core"></div>
+            <canvas class="mikors-webgl" id="mikorsCanvas" aria-hidden="true"></canvas>
             <div class="mikors-orbit orbit-a" aria-hidden="true"></div>
             <div class="mikors-orbit orbit-b" aria-hidden="true"></div>
             <div class="mikors-orbit orbit-c" aria-hidden="true"></div>
@@ -548,6 +563,234 @@
       <footer>© 2026 Khalid Alwaleed Goufe<br>Personal website</footer>
     </div>
   </div>
+
+  <script type="module">
+    (() => {
+      const stage = document.getElementById('mikors-stage') || document.querySelector('.mikors-stage');
+      const canvas = document.getElementById('mikorsCanvas');
+      if (!stage || !canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const reducedData = window.matchMedia('(max-width: 700px)').matches;
+      const maxDpr = reducedData ? 1.15 : 1.6;
+
+      import('https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js').then((THREE) => {
+        const renderer = new THREE.WebGLRenderer({
+          canvas,
+          alpha: true,
+          antialias: !reducedData,
+          powerPreference: 'low-power'
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
+        renderer.setSize(stage.clientWidth, stage.clientHeight, false);
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.12;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+        camera.position.set(0, 0, 7.2);
+
+        const coreGroup = new THREE.Group();
+        scene.add(coreGroup);
+
+        const ambient = new THREE.HemisphereLight(0xeaf4ff, 0x536b91, 2.1);
+        scene.add(ambient);
+        const keyLight = new THREE.PointLight(0xffffff, 38, 18);
+        keyLight.position.set(-3.2, 4, 5);
+        scene.add(keyLight);
+        const blueLight = new THREE.PointLight(0x78bfff, 24, 16);
+        blueLight.position.set(3.5, -2.5, 2.5);
+        scene.add(blueLight);
+        const rimLight = new THREE.PointLight(0xb6d8ff, 20, 14);
+        rimLight.position.set(0, 3.2, -3);
+        scene.add(rimLight);
+
+        const glass = new THREE.MeshPhysicalMaterial({
+          color: 0xdcecff,
+          metalness: 0.02,
+          roughness: 0.09,
+          transmission: 0.88,
+          thickness: 1.15,
+          ior: 1.28,
+          clearcoat: 1,
+          clearcoatRoughness: 0.06,
+          transparent: true,
+          opacity: 0.92,
+          envMapIntensity: 1.1
+        });
+        const core = new THREE.Mesh(new THREE.SphereGeometry(1.22, 96, 72), glass);
+        coreGroup.add(core);
+
+        const inner = new THREE.Mesh(
+          new THREE.SphereGeometry(0.76, 64, 48),
+          new THREE.MeshPhysicalMaterial({
+            color: 0x9bc9f5,
+            metalness: 0.22,
+            roughness: 0.22,
+            transmission: 0.18,
+            thickness: 0.6,
+            clearcoat: 1,
+            emissive: 0x18385d,
+            emissiveIntensity: 0.24
+          })
+        );
+        coreGroup.add(inner);
+
+        const innerGlow = new THREE.Mesh(
+          new THREE.SphereGeometry(0.43, 48, 32),
+          new THREE.MeshBasicMaterial({ color: 0xd8f0ff, transparent: true, opacity: 0.16 })
+        );
+        coreGroup.add(innerGlow);
+
+        const ringMaterial = (color, opacity) => new THREE.MeshBasicMaterial({
+          color, transparent: true, opacity, side: THREE.DoubleSide
+        });
+        const ringSpecs = [
+          { radius: 1.72, tube: 0.012, color: 0x8dbbe8, opacity: 0.82, x: 0.78, y: 0.2, z: 0.3, speed: 0.26 },
+          { radius: 1.92, tube: 0.008, color: 0xffffff, opacity: 0.78, x: 1.28, y: 0.55, z: -0.2, speed: -0.18 },
+          { radius: 1.56, tube: 0.009, color: 0x6ea8df, opacity: 0.7, x: 0.25, y: 1.08, z: 0.65, speed: 0.14 }
+        ];
+        const rings = ringSpecs.map((spec) => {
+          const mesh = new THREE.Mesh(
+            new THREE.TorusGeometry(spec.radius, spec.tube, 12, 180),
+            ringMaterial(spec.color, spec.opacity)
+          );
+          mesh.rotation.set(spec.x, spec.y, spec.z);
+          mesh.userData.speed = spec.speed;
+          coreGroup.add(mesh);
+          return mesh;
+        });
+
+        const particleCount = reducedData ? 90 : 190;
+        const particlePositions = new Float32Array(particleCount * 3);
+        for (let i = 0; i < particleCount; i++) {
+          const radius = 1.55 + Math.random() * 0.9;
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.acos(2 * Math.random() - 1);
+          particlePositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+          particlePositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+          particlePositions[i * 3 + 2] = radius * Math.cos(phi);
+        }
+        const particleGeometry = new THREE.BufferGeometry();
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        const particleField = new THREE.Points(
+          particleGeometry,
+          new THREE.PointsMaterial({ color: 0xb8ddff, size: reducedData ? 0.022 : 0.028, transparent: true, opacity: 0.82, sizeAttenuation: true })
+        );
+        coreGroup.add(particleField);
+
+        stage.classList.add('has-webgl');
+        let width = stage.clientWidth;
+        let height = stage.clientHeight;
+        let scrollProgress = 0;
+        let pointerX = 0;
+        let pointerY = 0;
+        let active = true;
+        let frame = 0;
+        const clock = new THREE.Clock();
+
+        const resize = () => {
+          width = stage.clientWidth;
+          height = stage.clientHeight;
+          renderer.setSize(width, height, false);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+        };
+        const resizeObserver = new ResizeObserver(resize);
+        resizeObserver.observe(stage);
+
+        const updateScroll = () => {
+          const rect = stage.getBoundingClientRect();
+          const travel = Math.max(1, window.innerHeight + rect.height);
+          scrollProgress = THREE.MathUtils.clamp((window.innerHeight - rect.top) / travel, 0, 1);
+        };
+        const onPointer = (event) => {
+          const rect = stage.getBoundingClientRect();
+          pointerX = ((event.clientX - rect.left) / rect.width - 0.5) * 0.7;
+          pointerY = ((event.clientY - rect.top) / rect.height - 0.5) * 0.7;
+        };
+        stage.addEventListener('pointermove', onPointer, { passive: true });
+        stage.addEventListener('pointerleave', () => { pointerX = 0; pointerY = 0; }, { passive: true });
+        window.addEventListener('scroll', updateScroll, { passive: true });
+        updateScroll();
+
+        const visibility = new IntersectionObserver(([entry]) => { active = entry.isIntersecting; });
+        visibility.observe(stage);
+
+        const animate = () => {
+          if (!active) { frame = requestAnimationFrame(animate); return; }
+          const elapsed = clock.getElapsedTime();
+          const scrollTilt = (scrollProgress - 0.15) * 0.38;
+          coreGroup.rotation.y += ((elapsed * 0.12 + pointerX * 0.34 + scrollTilt) - coreGroup.rotation.y) * 0.035;
+          coreGroup.rotation.x += ((pointerY * 0.26 + Math.sin(elapsed * 0.32) * 0.045 + (scrollProgress - 0.5) * 0.12) - coreGroup.rotation.x) * 0.035;
+          coreGroup.rotation.z = Math.sin(elapsed * 0.2) * 0.045 + (scrollProgress - 0.5) * 0.08;
+          const scrollScale = 1 + Math.sin(scrollProgress * Math.PI) * 0.055;
+          const pulse = 1 + Math.sin(elapsed * 1.15) * 0.012;
+          coreGroup.scale.setScalar(scrollScale * pulse);
+          core.scale.setScalar(1 + Math.sin(elapsed * 0.8) * 0.009);
+          inner.rotation.y = -elapsed * 0.18;
+          inner.rotation.x = Math.sin(elapsed * 0.35) * 0.12;
+          rings.forEach((ring) => { ring.rotation.z += ring.userData.speed * 0.008; });
+          particleField.rotation.y = -elapsed * 0.035;
+          particleField.rotation.x = Math.sin(elapsed * 0.17) * 0.09;
+          keyLight.position.x = -3.2 + Math.sin(elapsed * 0.45) * 0.6;
+          renderer.render(scene, camera);
+          frame = requestAnimationFrame(animate);
+        };
+        animate();
+
+        const activate = document.getElementById('mikorsActivate');
+        if (activate) {
+          activate.addEventListener('click', () => {
+            const boost = stage.classList.contains('is-active');
+            renderer.toneMappingExposure = boost ? 1.12 : 1.35;
+            blueLight.intensity = boost ? 24 : 38;
+          });
+        }
+
+        window.addEventListener('pagehide', () => {
+          cancelAnimationFrame(frame);
+          resizeObserver.disconnect();
+          visibility.disconnect();
+          renderer.dispose();
+          particleGeometry.dispose();
+          glass.dispose();
+        }, { once: true });
+      }).catch((error) => {
+        console.warn('MiKors 3D core unavailable; using glass fallback.', error);
+      });
+    })();
+
+    (() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const cards = [...document.querySelectorAll('.project-card')];
+      const heading = document.querySelector('.projects-heading');
+      const about = document.querySelector('.about-kag');
+      let ticking = false;
+
+      const updateDepth = () => {
+        const targets = cards.map((el, index) => ({ el, index, range: 0.13 }));
+        if (heading) targets.push({ el: heading, index: 0, range: 0.07 });
+        if (about) targets.push({ el: about, index: 0, range: 0.08 });
+        targets.forEach(({ el, index, range }) => {
+          const rect = el.getBoundingClientRect();
+          const center = rect.top + rect.height / 2;
+          const normalized = (center - window.innerHeight / 2) / (window.innerHeight / 2 + rect.height / 2);
+          const strength = Math.max(-1, Math.min(1, normalized));
+          const tilt = strength * (index === 1 ? -5 : 5) * range / 0.13;
+          const lift = Math.abs(strength) * 13;
+          el.style.transform = 'perspective(1100px) rotateX(' + tilt.toFixed(2) + 'deg) translateY(' + lift.toFixed(1) + 'px) translateZ(' + (12 * (1 - Math.abs(strength))).toFixed(1) + 'px)';
+        });
+        ticking = false;
+      };
+      const onScroll = () => {
+        if (!ticking) { ticking = true; requestAnimationFrame(updateDepth); }
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+      updateDepth();
+    })();
+  </script>
 
   <script>
     (() => {
